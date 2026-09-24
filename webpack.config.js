@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -29,10 +30,17 @@ module.exports = (env, argv) => {
           ],
         },
         {
-          test: /\.(png|jpg|jpeg|gif|svg|ico)$/i,
+          test: /\.(png|jpg|jpeg|gif|svg|ico|webp)$/i,
           type: 'asset/resource',
           generator: {
             filename: 'assets/[name][ext]',
+          },
+        },
+        {
+          test: /\.(woff|woff2|ttf|otf|eot)$/i,
+          type: 'asset/resource',
+          generator: {
+            filename: 'assets/fonts/[name][ext]',
           },
         },
       ],
@@ -42,6 +50,20 @@ module.exports = (env, argv) => {
         template: './src/index.html',
         filename: 'index.html',
         favicon: './src/assets/gadget-hub.png',
+      }),
+      // Copies everything in src/assets into dist/assets, so images used
+      // only in index.html (e.g. <img src="assets/...">) still get deployed.
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'src/assets',
+            to: 'assets',
+            noErrorOnMissing: true,
+            globOptions: {
+              ignore: ['**/*Zone.Identifier'],
+            },
+          },
+        ],
       }),
       ...(isDev
         ? []
