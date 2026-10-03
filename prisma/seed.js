@@ -1,0 +1,208 @@
+const { PrismaClient } = require("@prisma/client");
+
+const prisma = new PrismaClient();
+
+const products = [
+  {
+    name: "iPhone 16 Pro",
+    brand: "Apple",
+    category: "phone",
+    emoji: "📱",
+    price: 999,
+    originalPrice: 1099,
+    description: "The most powerful iPhone ever. A18 Pro chip, titanium design, 48MP camera system.",
+    rating: 4.9,
+    reviewCount: 2341,
+    stock: 18,
+    totalStock: 100,
+    isOnSale: true,
+    isNew: true,
+  },
+  {
+    name: "Galaxy S25 Ultra",
+    brand: "Samsung",
+    category: "phone",
+    emoji: "📱",
+    price: 849,
+    originalPrice: 1099,
+    description: "Galaxy AI meets pro-grade performance. 200MP camera, S Pen included.",
+    rating: 4.8,
+    reviewCount: 1876,
+    stock: 9,
+    totalStock: 60,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "MacBook Air M3",
+    brand: "Apple",
+    category: "laptop",
+    emoji: "💻",
+    price: 1199,
+    originalPrice: null,
+    description: "Supercharged by M3. Up to 18 hours battery, fanless design, stunning display.",
+    rating: 4.9,
+    reviewCount: 989,
+    stock: 22,
+    totalStock: 80,
+    isOnSale: false,
+    isNew: true,
+  },
+  {
+    name: "Surface Pro 11",
+    brand: "Microsoft",
+    category: "laptop",
+    emoji: "💻",
+    price: 899,
+    originalPrice: 1199,
+    description: "Tablet meets laptop. Snapdragon X Elite, all-day battery, stunning OLED display.",
+    rating: 4.7,
+    reviewCount: 654,
+    stock: 7,
+    totalStock: 50,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "AirPods Pro 3",
+    brand: "Apple",
+    category: "audio",
+    emoji: "🎧",
+    price: 249,
+    originalPrice: 279,
+    description: "Next-level Active Noise Cancellation. H2 chip, Transparency mode, spatial audio.",
+    rating: 4.8,
+    reviewCount: 3201,
+    stock: 35,
+    totalStock: 120,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "Sony WH-1000XM6",
+    brand: "Sony",
+    category: "audio",
+    emoji: "🎧",
+    price: 349,
+    originalPrice: 399,
+    description: "Industry-leading noise cancellation. 30-hour battery, multipoint connection.",
+    rating: 4.9,
+    reviewCount: 2104,
+    stock: 14,
+    totalStock: 70,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "Apple Watch Ultra 3",
+    brand: "Apple",
+    category: "watch",
+    emoji: "⌚",
+    price: 799,
+    originalPrice: null,
+    description: "Built for endurance. Titanium case, dual-frequency GPS, 60-hour battery.",
+    rating: 4.8,
+    reviewCount: 876,
+    stock: 11,
+    totalStock: 55,
+    isOnSale: false,
+    isNew: true,
+  },
+  {
+    name: "Galaxy Watch 7",
+    brand: "Samsung",
+    category: "watch",
+    emoji: "⌚",
+    price: 299,
+    originalPrice: 349,
+    description: "Advanced health monitoring. BioActive sensor, sleep coaching, 40-hour battery.",
+    rating: 4.7,
+    reviewCount: 521,
+    stock: 28,
+    totalStock: 90,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "iPad Pro M4",
+    brand: "Apple",
+    category: "tablet",
+    emoji: "📲",
+    price: 999,
+    originalPrice: null,
+    description: "Impossibly thin. M4 chip, Ultra Retina XDR OLED display, Apple Pencil Pro support.",
+    rating: 4.8,
+    reviewCount: 743,
+    stock: 19,
+    totalStock: 75,
+    isOnSale: false,
+    isNew: true,
+  },
+  {
+    name: "Pixel 9 Pro",
+    brand: "Google",
+    category: "phone",
+    emoji: "📱",
+    price: 749,
+    originalPrice: 799,
+    description: "Google AI baked in. Best-in-class camera, Tensor G4 chip, 7 years of updates.",
+    rating: 4.7,
+    reviewCount: 654,
+    stock: 5,
+    totalStock: 40,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "Sony A7 V",
+    brand: "Sony",
+    category: "camera",
+    emoji: "📷",
+    price: 2999,
+    originalPrice: 3499,
+    description: "Full-frame mirrorless excellence. 61MP sensor, 8K video, AI subject recognition.",
+    rating: 4.9,
+    reviewCount: 341,
+    stock: 4,
+    totalStock: 25,
+    isOnSale: true,
+    isNew: false,
+  },
+  {
+    name: "USB-C Hub 9-in-1",
+    brand: "Anker",
+    category: "accessory",
+    emoji: "🔌",
+    price: 59,
+    originalPrice: 79,
+    description: "Expand your setup. 4K HDMI, 100W PD, SD card reader, 3x USB-A, Ethernet.",
+    rating: 4.6,
+    reviewCount: 4512,
+    stock: 60,
+    totalStock: 200,
+    isOnSale: true,
+    isNew: false,
+  },
+];
+
+async function main() {
+  console.log("🌱 Seeding database...");
+
+  // Clear existing products
+  await prisma.product.deleteMany();
+
+  for (const product of products) {
+    await prisma.product.create({ data: product });
+  }
+
+  console.log(`✅ Seeded ${products.length} products`);
+}
+
+main()
+  .catch((e) => {
+    console.error("❌ Seed failed:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
